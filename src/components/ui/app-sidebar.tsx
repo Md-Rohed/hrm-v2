@@ -16,6 +16,7 @@ import {
 import Image from "next/image"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
 import Link from "next/link"
+import { adminRoutes } from "@/routes/admin.routes"
 
 export function AppSidebar() {
     return (
@@ -30,54 +31,64 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent className="bg-[#0f75bc]">
-                <SidebarGroup >
+                <SidebarGroup className="p-0 pt-2">
                     <SidebarGroupContent>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild>
-                                    <Link href="">
-                                        <LayoutDashboard />
-                                        <span>Dashboard</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
 
-                        <SidebarMenu>
-                            <Collapsible defaultOpen={false} className="group/collapsible">
-                                <SidebarMenuItem>
-                                    <CollapsibleTrigger asChild>
-                                        <SidebarMenuButton >
-                                            <Building2 />
-                                            Organization
-                                            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                                        </SidebarMenuButton>
-                                    </CollapsibleTrigger>
+                        {adminRoutes.map(navItem => {
+                            const hasChildren = !!navItem.children?.length;
 
-                                    <CollapsibleContent>
-                                        <SidebarMenuSub>
-                                            <SidebarMenuSubItem >
-                                                <SidebarMenuButton asChild>
-                                                    <Link href="">
-                                                        <span>Companies</span>
-                                                    </Link>
-                                                </SidebarMenuButton>
-                                            </SidebarMenuSubItem>
-                                        </SidebarMenuSub>
+                            return (
+                                <SidebarMenu key={navItem.id} className="">
+                                    {!hasChildren ?
+                                        <SidebarMenuItem className="">
+                                            <SidebarMenuButton asChild className="p-6 text-white">
+                                                <Link
+                                                    href={navItem.path || '/'}
+                                                >
+                                                    <navItem.icon className="mr-2.5"/>
+                                                    <span>{navItem.name}</span>
+                                                </Link>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                        : <Collapsible
+                                            defaultOpen={false}
+                                            className="group/collapsible"
+                                        >
+                                            <SidebarMenuItem>
+                                                <CollapsibleTrigger asChild>
+                                                    <SidebarMenuButton className="p-6 text-white">
+                                                        <navItem.icon className="mr-2.5"/>
+                                                        {navItem.name}
+                                                        <ChevronDown
+                                                            className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180"
+                                                        />
+                                                    </SidebarMenuButton>
+                                                </CollapsibleTrigger>
 
-                                        <SidebarMenuSub>
-                                            <SidebarMenuSubItem >
-                                                <SidebarMenuButton asChild>
-                                                    <Link href="">
-                                                        <span>Departments</span>
-                                                    </Link>
-                                                </SidebarMenuButton>
-                                            </SidebarMenuSubItem>
-                                        </SidebarMenuSub>
-                                    </CollapsibleContent>
-                                </SidebarMenuItem>
-                            </Collapsible>
-                        </SidebarMenu>
+                                                <CollapsibleContent>
+                                                    {navItem.children?.map(childNav => {
+                                                        return (
+                                                            <SidebarMenuSub
+                                                                key={childNav.id}>
+                                                                <SidebarMenuSubItem >
+                                                                    <SidebarMenuButton asChild className="p-6 text-white">
+                                                                        <Link href={childNav.path}>
+                                                                            <span>{childNav.name}</span>
+                                                                        </Link>
+                                                                    </SidebarMenuButton>
+                                                                </SidebarMenuSubItem>
+                                                            </SidebarMenuSub>
+                                                        )
+                                                    })}
+                                                </CollapsibleContent>
+                                            </SidebarMenuItem>
+                                        </Collapsible>
+                                    }
+
+                                </SidebarMenu>
+                            )
+                        })}
+
                     </SidebarGroupContent>
                 </SidebarGroup>
                 <SidebarGroup />
