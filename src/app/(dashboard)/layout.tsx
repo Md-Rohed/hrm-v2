@@ -9,7 +9,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <SidebarProvider>
                 <AppSidebar />
                 <main className="w-full">
-                    <div className="border-b-2 p-5 flex justify-between">
+                    <div className="border-b-2 p-5 flex justify-between sticky top-0 bg-white">
                         <div className="flex gap-3">
                             <SidebarTrigger />
                             {/* Breadcrumb */}
